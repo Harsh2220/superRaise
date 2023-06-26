@@ -1,7 +1,96 @@
+"use client";
+import useAuthStore from "@/store/authStore";
+/* eslint-disable @next/next/no-img-element */
+import { useAuthenticateMutation, useChallengeLazyQuery } from "@/lens";
+import useProfileStore from "@/store/profileStore";
+import getDefaultProfile from "@/utils/getDefaultProfile";
+import getIPFSLink from "@/utils/getIPFSLink";
+import getRawurl from "@/utils/getRawURL";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import React from "react";
-
+import { useEffect } from "react";
+import toast from "react-hot-toast";
+import { useAccount, useSignMessage } from "wagmi";
+import Avatar from "./UI/Avatar";
 export default function Hero() {
+  const { isConnected, address } = useAccount();
+  const {
+    setIsConnected,
+    setUserEthAddress,
+    setAccessToken,
+    setRefreshToken,
+    setHasHandle,
+    hasHandle,
+    setIsLensAuthenticated,
+    isLensAuthenticated,
+  } = useAuthStore();
+  const { currentProfile, setCurrentProfile } = useProfileStore();
+  const [getChallengeText] = useChallengeLazyQuery();
+  const [getTokens] = useAuthenticateMutation();
+  const signer = useSignMessage();
+
+  useEffect(() => {
+    if (isConnected) {
+      setIsConnected(true);
+      setUserEthAddress(address as string);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isConnected]);
+
+  useEffect(() => {
+    getDefaultProfile(address).then((profile) => {
+      if (profile) {
+        setHasHandle(true);
+        setCurrentProfile(profile);
+      }
+      if (!profile) {
+        setHasHandle(false);
+        return;
+      }
+    });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isConnected]);
+
+  const goToLensClaim = () => {
+    window.open("https://claim.lens.xyz", "blank");
+  };
+
+  const loginWithLens = async () => {
+    try {
+      const challengeText = await getChallengeText({
+        variables: {
+          request: {
+            address: address,
+          },
+        },
+      });
+      if (challengeText.data) {
+        const signature = await signer.signMessageAsync({
+          message: challengeText?.data?.challenge?.text,
+        });
+
+        const authTokens = await getTokens({
+          variables: {
+            request: {
+              address: address,
+              signature: signature,
+            },
+          },
+        });
+        if (authTokens.data) {
+          setIsLensAuthenticated(true);
+          setAccessToken(authTokens.data.authenticate.accessToken);
+          setRefreshToken(authTokens.data.authenticate.refreshToken);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      if (error instanceof Error) {
+        toast(error.message);
+      }
+    }
+  };
+
   return (
     <div className="relative">
       <header className="absolute inset-x-0 top-0 z-10 w-full">
@@ -90,7 +179,28 @@ export default function Hero() {
                 {" "}
                 Pricing{" "}
               </a>
-              <ConnectButton />
+              {!isConnected ? (
+                <ConnectButton showBalance={false} />
+              ) : (
+                <>
+                  {isLensAuthenticated ? (
+                    <div>
+                      <Avatar
+                        height={50}
+                        width={50}
+                        src={getIPFSLink(getRawurl(currentProfile?.picture))}
+                      />
+                    </div>
+                  ) : (
+                    <button
+                      onClick={hasHandle ? loginWithLens : goToLensClaim}
+                      className="inline-flex items-center justify-center px-5 py-2.5 text-base font-semibold transition-all duration-200 rounded-full bg-orange-500 text-white hover:bg-orange-600 focus:bg-orange-600"
+                    >
+                      {hasHandle ? "Login with Lens" : "Claim Lens handle"}
+                    </button>
+                  )}
+                </>
+              )}
             </div>
           </div>
         </div>

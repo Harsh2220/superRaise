@@ -1,6 +1,6 @@
+import "@rainbow-me/rainbowkit/styles.css";
 import "./globals.css";
 import { Providers } from "./providers";
-import "@rainbow-me/rainbowkit/styles.css";
 
 export const metadata = {
   title: "Create Next App",
@@ -15,7 +15,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );

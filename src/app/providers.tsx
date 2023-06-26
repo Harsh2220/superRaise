@@ -1,34 +1,26 @@
 "use client";
 
-import * as React from "react";
+import { APP_NAME } from "@/constants";
+import lensClient from "@/lib/client";
+import { ApolloProvider } from "@apollo/client";
 import {
-  RainbowKitProvider,
-  getDefaultWallets,
   connectorsForWallets,
+  getDefaultWallets,
+  RainbowKitProvider,
 } from "@rainbow-me/rainbowkit";
 import {
   argentWallet,
-  trustWallet,
   ledgerWallet,
+  trustWallet,
 } from "@rainbow-me/rainbowkit/wallets";
+import * as React from "react";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
-import {
-  mainnet,
-  polygon,
-  optimism,
-  arbitrum,
-  zora,
-  goerli,
-} from "wagmi/chains";
+import { goerli, polygonMumbai } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [
-    mainnet,
-    polygon,
-    optimism,
-    arbitrum,
-    zora,
+    polygonMumbai,
     ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true" ? [goerli] : []),
   ],
   [publicProvider()]
@@ -37,13 +29,13 @@ const { chains, publicClient, webSocketPublicClient } = configureChains(
 const projectId = "YOUR_PROJECT_ID";
 
 const { wallets } = getDefaultWallets({
-  appName: "RainbowKit demo",
+  appName: APP_NAME,
   projectId,
   chains,
 });
 
 const demoAppInfo = {
-  appName: "Rainbowkit Demo",
+  appName: APP_NAME,
 };
 
 const connectors = connectorsForWallets([
@@ -71,7 +63,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <WagmiConfig config={wagmiConfig}>
       <RainbowKitProvider chains={chains} appInfo={demoAppInfo}>
-        {mounted && children}
+        <ApolloProvider client={lensClient}>
+          {mounted && children}
+        </ApolloProvider>
       </RainbowKitProvider>
     </WagmiConfig>
   );

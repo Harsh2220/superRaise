@@ -40,14 +40,6 @@ const demoAppInfo = {
 
 const connectors = connectorsForWallets([
   ...wallets,
-  {
-    groupName: "Other",
-    wallets: [
-      argentWallet({ projectId, chains }),
-      trustWallet({ projectId, chains }),
-      ledgerWallet({ projectId, chains }),
-    ],
-  },
 ]);
 
 const wagmiConfig = createConfig({

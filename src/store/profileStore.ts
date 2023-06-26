@@ -1,10 +1,7 @@
 import { create } from "zustand";
 import { Profile } from "@/lens";
+import { ProfileStore } from "@/types/store";
 
-interface ProfileStore {
-  currentProfile: Profile | undefined;
-  setCurrentProfile: (profile: Profile | undefined) => void;
-}
 
 const useProfileStore = create<ProfileStore>((set) => ({
   currentProfile: undefined,

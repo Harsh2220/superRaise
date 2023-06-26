@@ -180,14 +180,15 @@ export default function Hero() {
                 Pricing{" "}
               </a>
               {!isConnected ? (
-                <ConnectButton showBalance={false} />
+                <ConnectButton showBalance={false}
+                />
               ) : (
                 <>
                   {isLensAuthenticated ? (
                     <div>
                       <Avatar
-                        height={50}
-                        width={50}
+                        height={35}
+                        width={35}
                         src={getIPFSLink(getRawurl(currentProfile?.picture))}
                       />
                     </div>

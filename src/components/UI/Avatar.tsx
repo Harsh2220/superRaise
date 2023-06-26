@@ -31,8 +31,7 @@ const Avatar: React.FC<AvatarProps> = ({
       : getIPFSLink(src);
 
   return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
+    <Image
       style={{
         opacity,
         height,
@@ -43,6 +42,8 @@ const Avatar: React.FC<AvatarProps> = ({
         borderWidth,
         zIndex: 9,
       }}
+      height={Number(height)}
+      width={Number(width)}
       src={resolvedSrc}
       alt={""}
     />

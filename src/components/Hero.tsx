@@ -180,8 +180,7 @@ export default function Hero() {
                 Pricing{" "}
               </a>
               {!isConnected ? (
-                <ConnectButton showBalance={false}
-                />
+                <ConnectButton showBalance={false} />
               ) : (
                 <>
                   {isLensAuthenticated ? (

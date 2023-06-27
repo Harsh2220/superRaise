@@ -19,23 +19,24 @@ export default function Upload() {
     try {
       let headersList = {
         Accept: "*/*",
-        "User-Agent": "Thunder Client (https://www.thunderclient.com)",
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjB4YTQyM0EwNUViODRFQUI2NUU5MTM3ZEVhYmZCRDEyN2RjMjUzQzA1MiIsInJvbGUiOiJub3JtYWwiLCJpYXQiOjE2NzE3Njg5MjAsImV4cCI6MTY3MTc3MDcyMH0.I9ApBf0dnZsMTcPicG-GTO4CFjMye1AUWlkO3g5rlKw",
         "Content-Type": "application/json",
       };
 
       let bodyContent = JSON.stringify(metadata);
 
-      let response = await fetch("http://localhost:3000/api/uploadMetadata", {
+      let response = await fetch("/api/upload", {
         method: "POST",
         body: bodyContent,
         headers: headersList,
       });
-
-      let data = await response.text();
-      console.log(data);
-    } catch (error) {}
+      if (response.ok) {
+        const hash = await response.json();
+        console.log(hash.uri);
+        alert(hash.uri)
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

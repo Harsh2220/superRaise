@@ -1,5 +1,6 @@
 "use client";
 
+import Navbar from "@/components/Navbar";
 import { APP_NAME } from "@/constants";
 import lensClient from "@/lib/client";
 import { ApolloProvider } from "@apollo/client";
@@ -8,11 +9,6 @@ import {
   getDefaultWallets,
   RainbowKitProvider,
 } from "@rainbow-me/rainbowkit";
-import {
-  argentWallet,
-  ledgerWallet,
-  trustWallet,
-} from "@rainbow-me/rainbowkit/wallets";
 import * as React from "react";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
 import { goerli, polygonMumbai } from "wagmi/chains";
@@ -54,6 +50,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <WagmiConfig config={wagmiConfig}>
       <RainbowKitProvider chains={chains} appInfo={demoAppInfo}>
         <ApolloProvider client={lensClient}>
+          <Navbar />
           {mounted && children}
         </ApolloProvider>
       </RainbowKitProvider>

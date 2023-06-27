@@ -6,12 +6,13 @@
 
 import { IPFS_UPLOAD_API } from "@/constants";
 
-const API_TOKEN = process.env.WEB3STORAGE_TOKEN;
+const API_TOKEN = process.env.NEXT_PUBLIC_WEB3STORAGE_TOKEN;
 
 const uploadImageToIPFS = async (
   imageBlob: Blob | undefined
 ): Promise<string> => {
   try {
+    console.log(API_TOKEN);
     const headersList = {
       Authorization: `Bearer ${API_TOKEN}`,
     };
@@ -24,6 +25,7 @@ const uploadImageToIPFS = async (
     return data.cid;
   } catch (error) {
     if (error instanceof Error) {
+      console.log("eeee",error)
     }
     throw new Error("Something went wrong");
   }

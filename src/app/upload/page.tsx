@@ -3,13 +3,12 @@ import { APP_ID } from "@/constants";
 import {
   PublicationMainFocus,
   PublicationMetadataDisplayTypes,
-  PublicationMetadataV2Input,
   useCreateDataAvailabilityPostViaDispatcherMutation,
 } from "@/lens";
 import useAuthStore from "@/store/authStore";
 import useProfileStore from "@/store/profileStore";
 import uploadImageToIPFS from "@/utils/uploadImageToIPFS";
-import React, { useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { v4 as uuid } from "uuid";
 export default function Upload() {
@@ -24,7 +23,7 @@ export default function Upload() {
         toast("Campaign created!");
       },
       onError: (err) => {
-        console.log(err)
+        console.log(err);
         toast("Something went wrong");
       },
     }
@@ -123,7 +122,8 @@ export default function Upload() {
       });
       if (response.ok) {
         const hash = await response.json();
-        console.log(hash.uri);
+        console.log("content uri", hash.uri);
+        console.log("at", accessToken);
         createMomokaPost({
           variables: {
             request: {

@@ -19,7 +19,8 @@ export default function Upload() {
   const { accessToken } = useAuthStore();
   const [createMomokaPost] = useCreateDataAvailabilityPostViaDispatcherMutation(
     {
-      onCompleted: () => {
+      onCompleted: (data) => {
+        console.log(data);
         toast("Campaign created!");
       },
       onError: (err) => {
@@ -122,12 +123,13 @@ export default function Upload() {
       });
       if (response.ok) {
         const hash = await response.json();
+        console.log(hash, "only hash");
         console.log("content uri", hash.uri);
         console.log("at", accessToken);
         createMomokaPost({
           variables: {
             request: {
-              contentURI: hash,
+              contentURI: hash?.uri,
               from: currentProfile?.id,
             },
           },

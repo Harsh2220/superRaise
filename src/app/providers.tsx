@@ -26,7 +26,7 @@ const { chains, publicClient, webSocketPublicClient } = configureChains(
   [publicProvider()]
 );
 
-const projectId = "YOUR_PROJECT_ID";
+const projectId = "6097f40a8f4f91e37e66cf3a5ca1fba2";
 
 const { wallets } = getDefaultWallets({
   appName: APP_NAME,
@@ -38,9 +38,7 @@ const demoAppInfo = {
   appName: APP_NAME,
 };
 
-const connectors = connectorsForWallets([
-  ...wallets,
-]);
+const connectors = connectorsForWallets([...wallets]);
 
 const wagmiConfig = createConfig({
   autoConnect: true,

@@ -11,7 +11,10 @@ import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useAccount, useSignMessage } from "wagmi";
 import Avatar from "./UI/Avatar";
+import { APP_DESCRIPTION, APP_NAME, APP_TAG } from "@/constants";
+import { useRouter } from "next/navigation";
 export default function Hero() {
+  const router = useRouter();
   const { isConnected, address } = useAccount();
   const {
     setIsConnected,
@@ -96,15 +99,7 @@ export default function Hero() {
       <header className="absolute inset-x-0 top-0 z-10 w-full">
         <div className="px-4 mx-auto sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 lg:h-20">
-            <div className="flex-shrink-0">
-              <a href="#" title="" className="flex">
-                <img
-                  className="w-auto h-8"
-                  src="https://cdn.rareblocks.xyz/collection/celebration/images/hero/3/logo.svg"
-                  alt=""
-                />
-              </a>
-            </div>
+            <div className="flex-shrink-0">{APP_NAME}</div>
 
             <button
               type="button"
@@ -210,23 +205,14 @@ export default function Hero() {
         <div className="flex flex-col lg:flex-row lg:items-stretch lg:min-h-[100vh]">
           <div className="relative flex items-center justify-center w-full lg:order-2 lg:w-7/12">
             <div className="absolute bottom-0 right-0 hidden lg:block">
-              <img
-                className="object-contain w-auto h-48"
-                src="https://cdn.rareblocks.xyz/collection/celebration/images/hero/3/curved-lines.png"
-                alt=""
-              />
+              {APP_NAME}
             </div>
 
             <div className="relative px-4 pt-24 pb-16 text-center sm:px-6 md:px-24 2xl:px-32 lg:py-24 lg:text-left">
-              <h1 className="text-4xl font-bold text-black sm:text-6xl xl:text-8xl">
-                Get it done.
-                <br />
-                Fast, Easy.
+              <h1 className="text-4xl font-bold text-black sm:text-6xl xl:text-7xl">
+                {APP_TAG}
               </h1>
-              <p className="mt-8 text-xl text-black">
-                We help you to make your remote work life easier. Build a
-                distruction free working experience.
-              </p>
+              <p className="mt-8 text-xl text-black">{APP_DESCRIPTION}</p>
               <a
                 href="#"
                 title=""
@@ -235,6 +221,17 @@ export default function Hero() {
               >
                 Explore {"->"}
               </a>
+              {isLensAuthenticated && (
+                <button
+                  className="inline-flex items-center justify-center px-5 py-2.5 text-base font-semibold transition-all duration-200 rounded-full bg-orange-500 text-white hover:bg-orange-600 focus:bg-orange-600 mt-8"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    router.push("/upload");
+                  }}
+                >
+                  Create Campaign {"->"}
+                </button>
+              )}
             </div>
           </div>
 
@@ -264,11 +261,7 @@ export default function Hero() {
                       clip-rule="evenodd"
                     />
                   </svg>
-                  <h2 className="font-bold text-white text-7xl ml-2.5">395</h2>
                 </div>
-                <p className="max-w-xs mt-1.5 text-xl text-white">
-                  Professionals have organized their desk via PostCra
-                </p>
               </div>
             </div>
           </div>

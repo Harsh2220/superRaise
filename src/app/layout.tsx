@@ -1,4 +1,5 @@
 import "@rainbow-me/rainbowkit/styles.css";
+import { Toaster } from "react-hot-toast";
 import "./globals.css";
 import { Providers } from "./providers";
 
@@ -17,6 +18,7 @@ export default function RootLayout({
       <body>
         <Providers>
           {children}
+          <Toaster />
         </Providers>
       </body>
     </html>

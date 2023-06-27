@@ -1,21 +1,113 @@
 "use client";
 import { APP_ID } from "@/constants";
-import { PublicationMainFocus, PublicationMetadataV2Input } from "@/lens";
-import React from "react";
+import {
+  PublicationMainFocus,
+  PublicationMetadataDisplayTypes,
+  PublicationMetadataV2Input,
+  useCreateDataAvailabilityPostViaDispatcherMutation,
+} from "@/lens";
+import useAuthStore from "@/store/authStore";
+import useProfileStore from "@/store/profileStore";
+import uploadImageToIPFS from "@/utils/uploadImageToIPFS";
+import React, { useState } from "react";
+import toast from "react-hot-toast";
 import { v4 as uuid } from "uuid";
 export default function Upload() {
-  const metadata: PublicationMetadataV2Input = {
-    attributes: [],
-    locale: "en-US",
-    mainContentFocus: PublicationMainFocus.TextOnly,
-    metadata_id: uuid(),
-    name: "POst btttttu",
-    version: "",
-    appId: APP_ID,
-    content: "Test contentttt",
-  };
+  const [postContent, setPostContent] = useState<string>("");
+  const [image, setImage] = useState<File | null>(null);
+
+  const { currentProfile } = useProfileStore();
+  const { accessToken } = useAuthStore();
+  const [createMomokaPost] = useCreateDataAvailabilityPostViaDispatcherMutation(
+    {
+      onCompleted: () => {
+        toast("Campaign created!");
+      },
+      onError: (err) => {
+        console.log(err)
+        toast("Something went wrong");
+      },
+    }
+  );
 
   const createPost = async () => {
+    if (postContent.trim().length === 0) {
+      toast("Please add more details about your campaign");
+      return;
+    }
+    let metadata;
+    if (image) {
+      const hash = await uploadImageToIPFS(image);
+      if (hash) {
+        metadata = {
+          version: "2.0.0",
+          metadata_id: uuid(),
+          appId: APP_ID,
+          name: postContent,
+          description: postContent,
+          content: postContent,
+          mainContentFocus: PublicationMainFocus.Image,
+          tags: [],
+          attributes: [
+            {
+              displayType: PublicationMetadataDisplayTypes.String,
+              traitType: "handle",
+              value: `@${currentProfile?.handle}`,
+            },
+            {
+              displayType: PublicationMetadataDisplayTypes.String,
+              traitType: "app",
+              value: APP_ID,
+            },
+          ],
+          media: [
+            {
+              item: `ipfs://${hash}`,
+              type: image.type,
+              cover: null,
+            },
+          ],
+          image: `ipfs://${hash}`,
+          imageMimeType: image.type,
+          animation_url: null,
+          external_url: `https://testnet.lenster.xyz/${currentProfile?.handle}`,
+          locale: "en-US",
+        };
+      } else {
+        console.log("image me locha, me chala");
+        return;
+      }
+    } else {
+      metadata = {
+        version: "2.0.0",
+        metadata_id: uuid(),
+        appId: APP_ID,
+        name: postContent,
+        description: postContent,
+        content: postContent,
+        mainContentFocus: PublicationMainFocus.TextOnly,
+        tags: [],
+        attributes: [
+          {
+            displayType: PublicationMetadataDisplayTypes.String,
+            traitType: "handle",
+            value: `@${currentProfile?.handle}`,
+          },
+          {
+            displayType: PublicationMetadataDisplayTypes.String,
+            traitType: "app",
+            value: APP_ID,
+          },
+        ],
+        media: [],
+        image: null,
+        imageMimeType: null,
+        animation_url: null,
+        external_url: `https://testnet.lenster.xyz/${currentProfile?.handle}`,
+        locale: "en-GB",
+      };
+    }
+
     try {
       let headersList = {
         Accept: "*/*",
@@ -32,7 +124,19 @@ export default function Upload() {
       if (response.ok) {
         const hash = await response.json();
         console.log(hash.uri);
-        alert(hash.uri)
+        createMomokaPost({
+          variables: {
+            request: {
+              contentURI: hash,
+              from: currentProfile?.id,
+            },
+          },
+          context: {
+            headers: {
+              "x-access-token": `Bearer ${accessToken}`,
+            },
+          },
+        });
       }
     } catch (error) {
       console.log(error);
@@ -41,14 +145,22 @@ export default function Upload() {
 
   return (
     <section className="max-w-xl p-6 mx-auto bg-white rounded-md shadow-md mt-20">
-      <h1 className="text-xl font-bold text-black capitalize">Create Post</h1>
+      <h1 className="text-xl font-bold text-black capitalize">
+        Create Your Campaign
+      </h1>
       <div className="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-1">
         <div>
           <label className="text-black" htmlFor="username">
-            Post
+            What is your campaign about?
           </label>
           <textarea
             id="username"
+            value={postContent}
+            placeholder="Write about your campaingn and tell us what you do?"
+            onChange={(e) => {
+              e.preventDefault();
+              setPostContent(e.target.value);
+            }}
             className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md focus:border-blue-500 focus:outline-none focus:ring"
           />
         </div>
@@ -75,11 +187,17 @@ export default function Upload() {
                   htmlFor="file-upload"
                   className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
                 >
-                  <span className="">Upload a file</span>
+                  <span className="">Upload your Images</span>
                   <input
                     id="file-upload"
                     name="file-upload"
                     type="file"
+                    onChange={(e) => {
+                      e.preventDefault();
+                      if (e.target.files) {
+                        setImage(e.target.files[0]);
+                      }
+                    }}
                     className="sr-only"
                   />
                 </label>

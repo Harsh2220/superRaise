@@ -12,6 +12,7 @@ import { toast } from "react-hot-toast";
 import { APP_NAME } from "@/constants";
 import getIPFSLink from "@/utils/getIPFSLink";
 import getRawurl from "@/utils/getRawURL";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   const { isConnected, address } = useAccount();
@@ -29,6 +30,7 @@ export default function Navbar() {
   const [getChallengeText] = useChallengeLazyQuery();
   const [getTokens] = useAuthenticateMutation();
   const signer = useSignMessage();
+  const router = useRouter();
 
   useEffect(() => {
     if (isConnected) {
@@ -94,7 +96,7 @@ export default function Navbar() {
   };
 
   return (
-    <header className="z-10 w-full">
+    <header className="z-10 w-full sticky top-0">
       <div className="px-4 mx-auto sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           <div className="flex-shrink-0">{APP_NAME}</div>
@@ -137,47 +139,30 @@ export default function Navbar() {
           </button>
 
           <div className="hidden ml-auto lg:flex lg:items-center lg:justify-center lg:space-x-10">
-            <a
-              href="#"
-              title=""
-              className="text-base font-semibold text-black transition-all duration-200 hover:text-opacity-80"
-            >
-              {" "}
-              Features{" "}
-            </a>
-
-            <a
-              href="#"
-              title=""
-              className="text-base font-semibold text-black transition-all duration-200 hover:text-opacity-80"
-            >
-              {" "}
-              Solutions{" "}
-            </a>
-
-            <a
-              href="#"
-              title=""
-              className="text-base font-semibold text-black transition-all duration-200 hover:text-opacity-80"
-            >
-              {" "}
-              Resources{" "}
-            </a>
-
-            <a
-              href="#"
-              title=""
-              className="text-base font-semibold text-black transition-all duration-200 hover:text-opacity-80"
-            >
-              {" "}
-              Pricing{" "}
-            </a>
             {!isConnected ? (
               <ConnectButton showBalance={false} />
             ) : (
               <>
                 {isLensAuthenticated ? (
-                  <div>
+                  <div className="flex items-center">
+                    <div className="flex items-center mr-8 space-x-8">
+                      <button
+                        className="text-base font-semibold text-black transition-all duration-200 hover:text-opacity-80"
+                        onClick={() => {
+                          router.push("/feed");
+                        }}
+                      >
+                        Campaigns
+                      </button>
+                      <button
+                        className="text-base font-semibold text-black transition-all duration-200 hover:text-opacity-80"
+                        onClick={() => {
+                          router.push("/upload");
+                        }}
+                      >
+                        Create
+                      </button>
+                    </div>
                     <Avatar
                       height={35}
                       width={35}

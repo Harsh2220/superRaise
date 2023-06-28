@@ -1,32 +1,47 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
+import { FeedItem } from "@/lens";
 import useProfileStore from "@/store/profileStore";
-import { SuperTokens } from "@/types";
 import createInvestStream from "@/utils/createFlow";
 import getInvestedCampaigns from "@/utils/getInvestedCampaigns";
 import React from "react";
 import toast from "react-hot-toast";
 import Avatar from "./UI/Avatar";
+import getIPFSLink from "@/utils/getIPFSLink";
+import getRawurl from "@/utils/getRawURL";
 
-type CampaignCardProps = {};
+export enum SuperTokens {
+  TestMatic = "MATICx",
+  TestDAI = "fDAIx",
+}
 
-const Card: React.FC<CampaignCardProps> = () => {
+const Card = ({ item }: { item: FeedItem }) => {
   const { currentProfile } = useProfileStore();
+
   React.useEffect(() => {
     getInvestedCampaigns({ address: currentProfile?.ownedBy }).then((res) => {
       //Filter fhere by app_id
       console.log(res);
     });
   }, [currentProfile?.ownedBy]);
+
   return (
     <div className="max-w-2xl p-8 bg-white rounded-lg m-8 shadow-sm">
       <div className="flex items-center justify-between">
         <div className="flex items-center">
-          <Avatar src={""} height={40} width={40} />
+          <Avatar
+            src={getIPFSLink(getRawurl(item?.root?.profile?.picture))}
+            height={40}
+            width={40}
+          />
           <div className="ml-2">
-            <h1 className="text-md leading-3 font-medium">Harsh Sachaniya</h1>
-            <p className="text-gray-500 text-sm">@iamharsh</p>
+            <h1 className="text-md leading-3 font-medium">
+              {item?.root?.profile?.name}
+            </h1>
+            <p className="text-gray-500 text-sm">
+              {item?.root?.profile?.handle}
+            </p>
           </div>
         </div>
         <button
@@ -54,13 +69,11 @@ const Card: React.FC<CampaignCardProps> = () => {
         </button>
       </div>
       <div className="mt-4">
-        <p className="text-lg">nothing</p>
+        <p className="text-lg">{item?.root?.metadata?.name}</p>
       </div>
       <div className="mt-4 justify-center items-center">
         <img
-          src={
-            "https://images.unsplash.com/photo-1682687982046-e5e46906bc6e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
-          }
+          src={getIPFSLink(getRawurl(item?.root?.metadata?.cover))}
           alt=""
           className="object-contain rounded-lg max-h-80"
         />

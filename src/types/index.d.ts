@@ -6,11 +6,6 @@ declare global {
   }
 }
 
-export enum SuperTokens {
-  TestMatic = "MATICx",
-  TestDAI = "fDAIx",
-}
-
 export type CreateInvestmentOptios = {
   streamToken: SuperTokens;
   senderAddress: string;

@@ -23,14 +23,15 @@ export default function Hero() {
                 {APP_TAG}
               </h1>
               <p className="mt-8 text-xl text-black">{APP_DESCRIPTION}</p>
-              <a
-                href="#"
-                title=""
+              <button
                 className="inline-flex items-center justify-center px-5 py-2.5 text-base font-semibold transition-all duration-200 rounded-full bg-orange-500 text-white hover:bg-orange-600 focus:bg-orange-600 mt-8"
-                role="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  router.push("/feed");
+                }}
               >
                 Explore {"->"}
-              </a>
+              </button>
               {isLensAuthenticated && (
                 <button
                   className="inline-flex items-center justify-center px-5 py-2.5 text-base font-semibold transition-all duration-200 rounded-full bg-orange-500 text-white hover:bg-orange-600 focus:bg-orange-600 mt-8"

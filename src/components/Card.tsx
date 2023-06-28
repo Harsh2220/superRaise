@@ -1,6 +1,14 @@
+"use client";
+
+/* eslint-disable @next/next/no-img-element */
+import useProfileStore from "@/store/profileStore";
+import createInvestStream, { SuperTokens } from "@/utils/createFlow";
+import toast from "react-hot-toast";
 import Avatar from "./UI/Avatar";
 
 export default function Card() {
+  const { currentProfile } = useProfileStore();
+
   return (
     <div className="max-w-2xl p-8 bg-white rounded-lg m-8 shadow-sm">
       <div className="flex items-center justify-between">
@@ -11,7 +19,24 @@ export default function Card() {
             <p className="text-gray-500 text-sm">@iamharsh</p>
           </div>
         </div>
-        <button className="inline-flex items-center justify-center px-6 py-2 text-base font-semibold transition-all duration-200 rounded-md bg-orange-500 text-white hover:bg-orange-600 focus:bg-orange-600">
+        <button
+          className="inline-flex items-center justify-center px-6 py-2 text-base font-semibold transition-all duration-200 rounded-md bg-orange-500 text-white hover:bg-orange-600 focus:bg-orange-600"
+          onClick={(e) => {
+            e.preventDefault();
+            createInvestStream({
+              flowRate: "150",
+              receiverAddress: currentProfile?.ownedBy,
+              senderAddress: currentProfile?.ownedBy,
+              streamToken: SuperTokens.TestDAI,
+            })
+              .then((res) => {
+                toast(res as string);
+              })
+              .catch(() => {
+                toast("Somwthing went wrong");
+              });
+          }}
+        >
           Invest
         </button>
       </div>

@@ -86,8 +86,8 @@ function MyStreams() {
 
   return (
     <div className="relative overflow-x-auto w-full mx-96">
-      <table className="w-auto text-sm text-left text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+      <table className="w-auto text-sm text-left text-gray-500">
+        <thead className="text-xs text-gray-700 uppercase bg-gray-50">
           <tr>
             <th scope="col" className="px-6 py-3">
               Token Streamed
@@ -111,13 +111,10 @@ function MyStreams() {
             allStreams.map((stream) => {
               const streamToken = stream.token.name;
               return (
-                <tr
-                  key={stream.id}
-                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                >
+                <tr key={stream.id} className="bg-white border-b">
                   <th
                     scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
                   >
                     {streamToken}
                   </th>

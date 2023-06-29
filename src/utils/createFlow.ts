@@ -22,7 +22,7 @@ export default async function createInvestStream({
 
     // console.log("Super-fluid signer", signer);
 
-    const superToken = await SDKInstance.loadSuperToken(streamToken);
+    const superToken = await SDKInstance.loadSuperToken("fDAIx");
     // console.log("Super Token", superToken);
     const balance = await superToken.balanceOf({
       account: senderAddress,
@@ -49,16 +49,17 @@ export default async function createInvestStream({
     };
 
     const createFlowOperation = superToken.createFlow(streamConfig);
-    // console.log(createFlowOperation);
+    console.log(createFlowOperation);
 
     // console.log("Creating your stream...");
 
     const result = await createFlowOperation.exec(superSigner);
-    // console.log(result);
+    console.log(result);
     await result.wait();
-    // console.log(`Congrats - you've just created a money stream!`);
+    console.log(`Congrats - you've just created a money stream!`);
     return "Stream CreatedSuccesfully";
   } catch (error) {
+    console.log(error)
     if (error instanceof Error) {
       if (error.message.includes("rejected transaction")) {
         throw new Error("Transaction cancelled by user");

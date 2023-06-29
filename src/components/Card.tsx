@@ -1,7 +1,7 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
-import { FeedItem } from "@/lens";
+import { FeedItem, Mirror, Post } from "@/lens";
 import useProfileStore from "@/store/profileStore";
 import createInvestStream from "@/utils/createFlow";
 import getInvestedCampaigns from "@/utils/getInvestedCampaigns";
@@ -16,7 +16,8 @@ export enum SuperTokens {
   TestDAI = "fDAIx",
 }
 
-const Card = ({ item }: { item: FeedItem }) => {
+type Publication = Post | Mirror;
+const Card = ({ item }: { item: Publication }) => {
   const { currentProfile } = useProfileStore();
 
   React.useEffect(() => {
@@ -24,6 +25,7 @@ const Card = ({ item }: { item: FeedItem }) => {
       //Filter fhere by app_id
       console.log(res);
     });
+    console.log(item?.profile?.ownedBy)
   }, [currentProfile?.ownedBy]);
 
   return (
@@ -31,16 +33,16 @@ const Card = ({ item }: { item: FeedItem }) => {
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <Avatar
-            src={getIPFSLink(getRawurl(item?.root?.profile?.picture))}
+            src={getIPFSLink(getRawurl(item?.profile?.picture))}
             height={40}
             width={40}
           />
           <div className="ml-2">
             <h1 className="text-md leading-3 font-medium">
-              {item?.root?.profile?.name}
+              {item?.profile?.name}
             </h1>
             <p className="text-gray-500 text-sm">
-              {item?.root?.profile?.handle}
+              {item?.profile?.handle}
             </p>
           </div>
         </div>
@@ -50,7 +52,7 @@ const Card = ({ item }: { item: FeedItem }) => {
             e.preventDefault();
             const streamConfig = {
               flowRate: "150",
-              receiverAddress: currentProfile?.ownedBy,
+              receiverAddress:item?.profile?.ownedBy,
               senderAddress: currentProfile?.ownedBy,
               streamToken: SuperTokens.TestDAI,
             };
@@ -69,11 +71,11 @@ const Card = ({ item }: { item: FeedItem }) => {
         </button>
       </div>
       <div className="mt-4">
-        <p className="text-lg">{item?.root?.metadata?.name}</p>
+        <p className="text-lg">{item?.metadata?.name}</p>
       </div>
       <div className="mt-4 justify-center items-center">
         <img
-          src={getIPFSLink(getRawurl(item?.root?.metadata?.cover))}
+          src={getIPFSLink(getRawurl(item?.metadata?.cover))}
           alt=""
           className="object-contain rounded-lg max-h-80"
         />

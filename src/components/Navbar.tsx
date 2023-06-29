@@ -157,6 +157,14 @@ export default function Navbar() {
                       <button
                         className="text-base font-semibold text-black transition-all duration-200 hover:text-opacity-80"
                         onClick={() => {
+                          router.push("/myinvestments");
+                        }}
+                      >
+                        Your Investments
+                      </button>
+                      <button
+                        className="text-base font-semibold text-black transition-all duration-200 hover:text-opacity-80"
+                        onClick={() => {
                           router.push("/upload");
                         }}
                       >

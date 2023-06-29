@@ -1,6 +1,7 @@
 "use client";
 
 import Card from "@/components/Card";
+import MyStreams from "@/components/MyStreams";
 import ProfileCard from "@/components/ProfileCard";
 import {
   ExplorePublicationRequest,

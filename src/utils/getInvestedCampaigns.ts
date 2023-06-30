@@ -1,11 +1,10 @@
-import { Framework } from "@superfluid-finance/sdk-core";
+import { Framework, IStreamRequestFilter } from "@superfluid-finance/sdk-core";
 import { ethers } from "ethers";
 
-type InvestedCampaignsProps = {
-  address: string;
-};
+type UserStreamRequestOptions = Required<Pick<IStreamRequestFilter, "sender">> &
+  Partial<Omit<IStreamRequestFilter, "sender">>;
 
-async function getInvestedCampaigns({ address }: InvestedCampaignsProps) {
+async function getInvestedCampaigns({ sender }: UserStreamRequestOptions) {
   try {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
 
@@ -19,7 +18,7 @@ async function getInvestedCampaigns({ address }: InvestedCampaignsProps) {
     });
 
     const allStream = await SDKInstance.query.listStreams({
-      sender: address,
+      sender: sender,
     });
     console.log("All Streams", allStream.items);
 

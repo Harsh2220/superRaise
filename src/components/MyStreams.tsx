@@ -32,11 +32,11 @@ function MyStreams() {
     const MSG_HASH =
       "0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000164372656174656420766961205375706572526169736500000000000000000000";
     console.log("All Streams", allStream.items);
-    const appStreams = allStream.items.filter(
-      (stream) => stream?.userData === MSG_HASH
-    );
-    console.log(appStreams);
-    setAllStreams(appStreams);
+    // const appStreams = allStream.items.filter(
+    //   (stream) => stream?.userData === MSG_HASH
+    // );
+    // console.log(appStreams, 'yulu');
+    setAllStreams(allStream.items);
   }
 
   async function deleteStream({
@@ -85,11 +85,11 @@ function MyStreams() {
   }, [deletingStream]);
 
   return (
-    <div className="w-full flex justify-center min-h-screen my-16">
+    <div className="w-full flex justify-center min-h-screen my-16 rounded-lg">
       <div>
-        <table className="w-auto text-sm text-left text-gray-500">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-            <tr>
+        <table className="w-auto text-sm text-left text-gray-500 rounded-lg">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50 rounded-lg">
+            <tr className="rounded-lg">
               <th scope="col" className="px-6 py-3">
                 Token Streamed
               </th>

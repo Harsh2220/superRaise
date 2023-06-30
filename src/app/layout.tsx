@@ -15,7 +15,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-gradient-to-b from-[#101212] to-[#08201D]">
+      <body className="bg-gradient-to-b from-[#101212] to-[#08201D] min-h-screen">
         <Providers>
           {children}
           <Toaster />

@@ -47,25 +47,6 @@ export default function Hero() {
             </div>
 
             <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
-
-            <div className="absolute bottom-0 left-0">
-              <div className="p-4 sm:p-6 lg:p-8">
-                <div className="flex items-center">
-                  <svg
-                    className="w-10 h-10 text-orange-500"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>

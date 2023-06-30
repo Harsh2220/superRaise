@@ -25,7 +25,7 @@ const Card = ({ item }: { item: Publication }) => {
       //Filter fhere by app_id
       console.log(res);
     });
-    console.log(item?.profile?.ownedBy)
+    console.log(item?.profile?.ownedBy);
   }, [currentProfile?.ownedBy]);
 
   return (
@@ -41,9 +41,7 @@ const Card = ({ item }: { item: Publication }) => {
             <h1 className="text-md leading-3 font-medium">
               {item?.profile?.name}
             </h1>
-            <p className="text-gray-500 text-sm">
-              {item?.profile?.handle}
-            </p>
+            <p className="text-gray-500 text-sm">{item?.profile?.handle}</p>
           </div>
         </div>
         <button
@@ -52,7 +50,7 @@ const Card = ({ item }: { item: Publication }) => {
             e.preventDefault();
             const streamConfig = {
               flowRate: "150",
-              receiverAddress:item?.profile?.ownedBy,
+              receiverAddress: item?.profile?.ownedBy,
               senderAddress: currentProfile?.ownedBy,
               streamToken: SuperTokens.TestDAI,
             };
@@ -73,14 +71,17 @@ const Card = ({ item }: { item: Publication }) => {
       <div className="mt-4">
         <p className="text-lg">{item?.metadata?.name}</p>
       </div>
-      <div className="mt-4 justify-center items-center">
-        <img
-          src={getIPFSLink(getRawurl(item?.metadata?.cover))}
-          alt=""
-          className="object-contain rounded-lg max-h-80"
-        />
-      </div>
+      {item?.metadata?.cover && (
+        <div className="mt-4 justify-center items-center">
+          <img
+            src={getIPFSLink(getRawurl(item?.metadata?.cover))}
+            alt=""
+            className="object-contain rounded-lg max-h-80"
+          />
+        </div>
+      )}
     </div>
   );
 };
+
 export default Card;

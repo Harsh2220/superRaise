@@ -1,26 +1,18 @@
 "use client";
 
 import Card from "@/components/Card";
-import MyStreams from "@/components/MyStreams";
 import ProfileCard from "@/components/ProfileCard";
-import {
-  ExplorePublicationRequest,
-  FeedEventItemType,
-  PublicationMainFocus,
-  PublicationSortCriteria,
-  useExploreLazyQuery,
-  useExploreQuery,
-  useFeedQuery,
-} from "@/lens";
+import { PublicationSortCriteria, useExploreQuery } from "@/lens";
 import useAuthStore from "@/store/authStore";
 import useProfileStore from "@/store/profileStore";
-import { Framework } from "@superfluid-finance/sdk-core";
+import { Framework, IStream } from "@superfluid-finance/sdk-core";
 import { ethers } from "ethers";
 import React, { useEffect } from "react";
 
 export default function Feed() {
   const { accessToken } = useAuthStore();
   const { currentProfile } = useProfileStore();
+  const [allStream, setAllStream] = React.useState<IStream[]>();
 
   async function get() {
     try {
@@ -35,14 +27,24 @@ export default function Feed() {
         provider: provider,
       });
       const allStream = await SDKInstance.query.listStreams({
-        sender: currentProfile?.ownedBy,
+        receiver: currentProfile?.ownedBy,
       });
-      console.log(allStream.items);
+      const MSG_HASH =
+        "0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000164372656174656420766961205375706572526169736500000000000000000000";
+      console.log("All Streams", allStream.items);
+      const appStreams = allStream.items.filter(
+        (stream) => stream?.userData === MSG_HASH
+      );
+      setAllStream(appStreams);
     } catch (error) {
       console.log(error);
     }
   }
+
   useEffect(() => {
+    if (!currentProfile) {
+      return;
+    }
     get();
   }, []);
 
@@ -61,23 +63,26 @@ export default function Feed() {
     },
     // skip: !currentProfile || !accessToken,
   });
-  console.log(data?.explorePublications.items);
 
   return (
     <div className="flex justify-evenly">
       <div className="max-w-2xl">
         {data &&
           data?.explorePublications?.items.length > 0 &&
-          data?.explorePublications?.items?.map((item) => (
-            <Card key={item?.id} item={item} />
+          data?.explorePublications?.items?.map((item, index) => (
+            <Card key={index} item={item} />
           ))}
       </div>
-      <div className="w-80 bg-white p-8 max-h-80 m-8 rounded-lg shadow-lg sticky top-20">
-        <h1 className="text-2xl font-semibold">Top investors</h1>
-        <div className="mt-4">
-          <ProfileCard address={""} />
+      {allStream && allStream.length > 0 ? (
+        <div className="w-80 bg-white p-8 max-h-80 m-8 rounded-lg shadow-lg sticky top-20">
+          <h1 className="text-2xl font-semibold">Your active investors</h1>
+          {allStream.map((el, index) => (
+            <div className="mt-4" key={index}>
+              <ProfileCard address={el.sender} />
+            </div>
+          ))}
         </div>
-      </div>
+      ) : null}
     </div>
   );
 }

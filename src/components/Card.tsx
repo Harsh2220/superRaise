@@ -5,7 +5,7 @@ import { FeedItem, Mirror, Post } from "@/lens";
 import useProfileStore from "@/store/profileStore";
 import createInvestStream from "@/utils/createFlow";
 import getInvestedCampaigns from "@/utils/getInvestedCampaigns";
-import React from "react";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
 import Avatar from "./UI/Avatar";
 import getIPFSLink from "@/utils/getIPFSLink";
@@ -19,13 +19,14 @@ export enum SuperTokens {
 type Publication = Post | Mirror;
 const Card = ({ item }: { item: Publication }) => {
   const { currentProfile } = useProfileStore();
-
+  const [isCreating, setIsCreating] = useState(false);
   React.useEffect(() => {
-    getInvestedCampaigns({ address: currentProfile?.ownedBy }).then((res) => {
+    getInvestedCampaigns({ sender: currentProfile?.ownedBy }).then((res) => {
       //Filter fhere by app_id
       console.log(res);
     });
     console.log(item?.profile?.ownedBy);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentProfile?.ownedBy]);
 
   return (
@@ -48,6 +49,11 @@ const Card = ({ item }: { item: Publication }) => {
           className="inline-flex items-center justify-center px-6 py-2 text-base font-semibold transition-all duration-200 rounded-md bg-orange-500 text-white hover:bg-orange-600 focus:bg-orange-600"
           onClick={(e) => {
             e.preventDefault();
+            const promt = confirm(
+              "You will be investing 0.000025 fDAIx/sec in this project"
+            );
+            if (!promt) return;
+            setIsCreating(true);
             const streamConfig = {
               flowRate: "150",
               receiverAddress: item?.profile?.ownedBy,
@@ -62,10 +68,12 @@ const Card = ({ item }: { item: Publication }) => {
                 if (err instanceof Error) {
                   toast(err.message);
                 }
+              }).finally(() => {
+                setIsCreating(false)
               });
           }}
         >
-          Invest
+          {isCreating ? "Creating..." : "Invest"}
         </button>
       </div>
       <div className="mt-4">

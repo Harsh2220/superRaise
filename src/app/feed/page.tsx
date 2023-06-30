@@ -46,6 +46,7 @@ export default function Feed() {
       return;
     }
     get();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const { data, error, loading, refetch, fetchMore } = useExploreQuery({

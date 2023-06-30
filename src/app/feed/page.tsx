@@ -35,7 +35,9 @@ export default function Feed() {
       const appStreams = allStream.items.filter(
         (stream) => stream?.userData === MSG_HASH
       );
-      
+
+      console.log(appStreams);
+
       setAllStream(appStreams);
     } catch (error) {
       console.log(error);

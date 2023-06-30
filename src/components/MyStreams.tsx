@@ -85,69 +85,71 @@ function MyStreams() {
   }, [deletingStream]);
 
   return (
-    <div className="relative overflow-x-auto w-full mx-96">
-      <table className="w-auto text-sm text-left text-gray-500">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-          <tr>
-            <th scope="col" className="px-6 py-3">
-              Token Streamed
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Receiving Address
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Flow Rate
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Active ?
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Actions
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {allStreams.length > 0 &&
-            allStreams.map((stream) => {
-              const streamToken = stream.token.name;
-              return (
-                <tr key={stream.id} className="bg-white border-b">
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-                  >
-                    {streamToken}
-                  </th>
-                  <td className="px-6 py-4">{stream.receiver}</td>
-                  <td className="px-6 py-4">
-                    {ethers.utils.formatEther(stream.currentFlowRate)}{" "}
-                    {stream.token.symbol}/s
-                  </td>
-                  <td className="px-6 py-4">
-                    {stream.currentFlowRate === "0" ? "No" : "Yes"}
-                  </td>
-                  <td className="px-6 py-4">
-                    {stream.currentFlowRate !== "0" ? (
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          deleteStream({
-                            receiver: stream.receiver,
-                            sender: stream.sender,
-                          });
-                        }}
-                      >
-                        {deletingStream ? "Deleting..." : "Cancel Stream"}
-                      </button>
-                    ) : (
-                      <button>See More</button>
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
-        </tbody>
-      </table>
+    <div className="w-full flex justify-center min-h-screen my-16">
+      <div>
+        <table className="w-auto text-sm text-left text-gray-500">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+            <tr>
+              <th scope="col" className="px-6 py-3">
+                Token Streamed
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Receiving Address
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Flow Rate
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Active ?
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {allStreams.length > 0 &&
+              allStreams.map((stream) => {
+                const streamToken = stream.token.name;
+                return (
+                  <tr key={stream.id} className="bg-white border-b">
+                    <th
+                      scope="row"
+                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                    >
+                      {streamToken}
+                    </th>
+                    <td className="px-6 py-4">{stream.receiver}</td>
+                    <td className="px-6 py-4">
+                      {ethers.utils.formatEther(stream.currentFlowRate)}{" "}
+                      {stream.token.symbol}/s
+                    </td>
+                    <td className="px-6 py-4">
+                      {stream.currentFlowRate === "0" ? "No" : "Yes"}
+                    </td>
+                    <td className="px-6 py-4 text-red-500">
+                      {stream.currentFlowRate !== "0" ? (
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            deleteStream({
+                              receiver: stream.receiver,
+                              sender: stream.sender,
+                            });
+                          }}
+                        >
+                          {deletingStream ? "Deleting..." : "Cancel Stream"}
+                        </button>
+                      ) : (
+                        <button>See More</button>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

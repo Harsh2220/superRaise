@@ -15,7 +15,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body className="bg-gradient-to-b from-[#101212] to-[#08201D]">
         <Providers>
           {children}
           <Toaster />

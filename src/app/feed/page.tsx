@@ -35,6 +35,7 @@ export default function Feed() {
       const appStreams = allStream.items.filter(
         (stream) => stream?.userData === MSG_HASH
       );
+      
       setAllStream(appStreams);
     } catch (error) {
       console.log(error);
@@ -83,7 +84,17 @@ export default function Feed() {
             </div>
           ))}
         </div>
-      ) : null}
+      ) : (
+        <div className="w-80 bg-white p-8 h-72 m-8 rounded-lg shadow-lg sticky top-20 flex-col justify-between">
+          <h1 className="text-2xl font-semibold">Your active investors</h1>
+          <div className="my-8">
+            <p className="text-7xl text-center mt-4">🔍</p>
+            <p className="text-center text-lg mt-4 text-slate-500">
+              Looks like you dont have any active investors
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -27,15 +27,24 @@ export default function Feed() {
         provider: provider,
       });
       const allStream = await SDKInstance.query.listStreams({
-        sender: currentProfile?.ownedBy,
+        receiver: currentProfile?.ownedBy,
       });
-      setAllStream(allStream.items);
+      const MSG_HASH =
+        "0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000164372656174656420766961205375706572526169736500000000000000000000";
+      console.log("All Streams", allStream.items);
+      const appStreams = allStream.items.filter(
+        (stream) => stream?.userData === MSG_HASH
+      );
+      setAllStream(appStreams);
     } catch (error) {
       console.log(error);
     }
   }
 
   useEffect(() => {
+    if (!currentProfile) {
+      return;
+    }
     get();
   }, []);
 
@@ -66,7 +75,7 @@ export default function Feed() {
       </div>
       {allStream && allStream.length > 0 ? (
         <div className="w-80 bg-white p-8 max-h-80 m-8 rounded-lg shadow-lg sticky top-20">
-          <h1 className="text-2xl font-semibold">Top investors</h1>
+          <h1 className="text-2xl font-semibold">Your active investors</h1>
           {allStream.map((el, index) => (
             <div className="mt-4" key={index}>
               <ProfileCard address={el.sender} />

@@ -4,6 +4,7 @@ import getIPFSLink from "@/utils/getIPFSLink";
 import getRawurl from "@/utils/getRawURL";
 import { Profile, Scalars } from "@/lens";
 import getDefaultProfile from "@/utils/getDefaultProfile";
+import formatAddress from "@/utils/shortenAddress";
 
 export default function ProfileCard({
   address,
@@ -29,7 +30,9 @@ export default function ProfileCard({
         width={40}
       />
       <div className="ml-2">
-        <h1 className="text-md leading-3 font-medium">{profile?.name}</h1>
+        <h1 className="text-md leading-3 font-medium">
+          {profile?.name || formatAddress(profile?.ownedBy)}
+        </h1>
         <p className="text-gray-500 text-sm">{profile?.handle}</p>
       </div>
     </div>
